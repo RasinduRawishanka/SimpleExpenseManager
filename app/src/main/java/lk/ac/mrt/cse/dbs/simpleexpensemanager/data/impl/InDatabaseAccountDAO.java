@@ -20,15 +20,15 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Account;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
 
 public class InDatabaseAccountDAO implements AccountDAO {
-    private final DataBaseManager dbManager;
+    private final DataBaseManager database_manager;
     private SQLiteDatabase SQL_database;
     public InDatabaseAccountDAO(Context context){
-        this.dbManager = new DataBaseManager(context);
+        this.database_manager = new DataBaseManager(context);
     }
 
     // get accounts data from database as cursor object
     public Account getAccount(String accountNum) throws InvalidAccountException {
-        Cursor cursor = this.dbManager.getAccountDataFromDB(accountNum);
+        Cursor cursor = this.database_manager.getAccountDataFromDB(accountNum);
         if (cursor != null){
             cursor.moveToFirst();
             Account account = new Account(accountNum, cursor.getString(cursor.getColumnIndex(BANK_BRANCH)),
@@ -53,7 +53,7 @@ public class InDatabaseAccountDAO implements AccountDAO {
 
     public List<Account> getAccountsList() {
         List<Account> accountsList = new ArrayList<Account>();
-        Cursor cursor = this.dbManager.getAccountDataFromDB();
+        Cursor cursor = this.database_manager.getAccountDataFromDB();
 
         while(cursor.moveToNext()) {
             String accountNum = cursor.getString(cursor.getColumnIndex(ACCOUNT_NUMBER));
@@ -70,17 +70,17 @@ public class InDatabaseAccountDAO implements AccountDAO {
 
     @Override
     public void removeAccount(String accountNo) throws InvalidAccountException {
-        this.dbManager.removeAccountFromDB(accountNo);
+        this.database_manager.removeAccountFromDB(accountNo);
     }
     @Override
     public void addAccount(Account account) {
-        this.dbManager.insertToDataBase(account.getAccountNo(),account.getBankName(),account.getAccountHolderName(),account.getBalance());
+        this.database_manager.insertToDataBase(account.getAccountNo(),account.getBankName(),account.getAccountHolderName(),account.getBalance());
     }
 
     @Override
     public void updateBalance(String accountNo, ExpenseType expenseType, double amount) throws InvalidAccountException {
 
-        SQL_database = dbManager.getWritableDatabase();
+        SQL_database = database_manager.getWritableDatabase();
         String selection = ACCOUNT_NUMBER + " = ?";
         Cursor cursor = SQL_database.query(  //process the query
                 ACCOUNT_TABLE,
