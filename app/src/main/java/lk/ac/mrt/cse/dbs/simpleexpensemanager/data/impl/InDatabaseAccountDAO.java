@@ -21,7 +21,7 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
 
 public class InDatabaseAccountDAO implements AccountDAO {
     private final DataBaseManager dbManager;
-    private SQLiteDatabase SQLDatabase;
+    private SQLiteDatabase SQL_database;
     public InDatabaseAccountDAO(Context context){
         this.dbManager = new DataBaseManager(context);
     }
@@ -80,9 +80,9 @@ public class InDatabaseAccountDAO implements AccountDAO {
     @Override
     public void updateBalance(String accountNo, ExpenseType expenseType, double amount) throws InvalidAccountException {
 
-        SQLDatabase = dbManager.getWritableDatabase();
+        SQL_database = dbManager.getWritableDatabase();
         String selection = ACCOUNT_NUMBER + " = ?";
-        Cursor cursor = SQLDatabase.query(  //process the query
+        Cursor cursor = SQL_database.query(  //process the query
                 ACCOUNT_TABLE,
                 new String[]{INITIAL_BALANCE},
                 selection,
@@ -107,9 +107,9 @@ public class InDatabaseAccountDAO implements AccountDAO {
         else{
             rowValues.put(INITIAL_BALANCE, accountBalance - amount);
         }
-        SQLDatabase.update(ACCOUNT_TABLE,rowValues,ACCOUNT_NUMBER + " =?", new String[] {accountNo});
+        SQL_database.update(ACCOUNT_TABLE,rowValues,ACCOUNT_NUMBER + " =?", new String[] {accountNo});
         cursor.close();
-        SQLDatabase.close();
+        SQL_database.close();
 
     }
 
